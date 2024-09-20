@@ -35,8 +35,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 300,
-    justifyContent: "center",
-    alignItems: "center",
   },
   slogan: {
     flex: 1,
