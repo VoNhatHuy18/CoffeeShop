@@ -1,42 +1,121 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { ScrollView } from "react-native-web";
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = () => {
-    // Handle registration logic here
-    console.log("Registering:", { username, email, password });
-    // Navigate to another screen if needed
-    // navigation.navigate('SomeOtherScreen');
-  };
+  const handleRegister = () => {};
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Register" onPress={handleRegister} />
+      
+        <Image
+          style={styles.logo}
+          source={require("../image/HinhGioiThieu/logo.png")}
+        />
+        <View style={styles.login}>
+          <Text style={styles.title}>Đăng Ký</Text>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("../image/HinhGioiThieu/nhieuhatcaphe.png")}
+            />
+          </View>
+
+          <Text style={styles.label}>Họ Và Tên</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nhập Họ Và Tên"
+            value={username}
+            onChangeText={setUsername}
+          />
+
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nhập Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+
+          <Text style={styles.label}>Mật Khẩu</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Nhập mật khẩu"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Icon
+                name={showPassword ? "visibility" : "visibility-off"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Nhập Lại Mật Khẩu</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Nhập lại mật khẩu"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirmPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              <Icon
+                name={showConfirmPassword ? "visibility" : "visibility-off"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
+
+          
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate()}>
+            <View
+              style={{
+                backgroundColor: "#4B2C20",
+                width: "80%",
+                height: 50,
+                borderRadius: 25,
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+                margin: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: "Times New Roman",
+                  fontSize: 20,
+                }}
+              >
+                Đăng Ký
+              </Text>
+            </View>
+          </TouchableOpacity>
     </View>
   );
 };
@@ -44,20 +123,73 @@ const RegisterScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 16,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#AE7A51",
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    margin: 15,
+  },
+  login: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "#FAFAFA",
+    borderTopLeftRadius: 34,
+    borderTopRightRadius: 34,
+    padding: 20,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 16,
+    color: "#4B2C20",
+    fontFamily: "Times New Roman",
+    fontWeight: "bold",
+    fontSize: 30,
     textAlign: "center",
   },
+  label: {
+    padding: 10,
+    color: "#4E8D7C",
+    fontSize: 15,
+    fontWeight: "bold",
+    fontFamily: "Times New Roman",
+  },
   input: {
-    height: 40,
+    height: 50,
+    width: "100%",
     borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+    borderRadius: 15,
+    paddingLeft: 10,
+    color: "gray",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 15,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 50,
+    width: "100%",
+    borderColor: "gray",
+    borderRadius: 15,
+    color: "gray",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    color: "gray",
+    height: 50,
+    width: "100%",
+    borderRadius: 15,
+    paddingLeft: 10,
   },
 });
 

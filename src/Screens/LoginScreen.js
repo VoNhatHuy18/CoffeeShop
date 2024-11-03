@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
         <Text
           style={{
             padding: 10,
-            color: "#4B2C20",
+            color: "#4E8D7C",
             fontSize: 15,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
@@ -55,10 +55,9 @@ const LoginScreen = ({ navigation }) => {
         </Text>
         <TextInput
           style={{
-            height: 40,
-            width: "80% ",
+            height: 50,
+            width: "70% ",
             borderColor: "gray",
-            borderWidth: 1,
             borderRadius: 15,
             alignSelf: "center",
             paddingLeft: 10,
@@ -75,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
         <Text
           style={{
             padding: 10,
-            color: "#4B2C20",
+            color: "#4E8D7C",
             fontSize: 15,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
@@ -85,10 +84,9 @@ const LoginScreen = ({ navigation }) => {
         </Text>
         <TextInput
           style={{
-            height: 40,
-            width: "80% ",
+            height: 50,
+            width: "70% ",
             borderColor: "gray",
-            borderWidth: 1,
             borderRadius: 15,
             alignSelf: "center",
             paddingLeft: 10,
@@ -103,21 +101,27 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Nhập mật khẩu"
         ></TextInput>
 
-        <View style={{ flex: 1, justifyContent: "center" }}>
+        <View style={{ flex: 1, justifyContent: "center", }}>
           <TouchableOpacity onPress={() => navigation.navigate()}>
-            <Text style={styles.forgotPassword}>Bạn quên mật khẩu ?</Text>
+            <Text style={styles.forgotPassword}>Quên mật khẩu ?</Text>
           </TouchableOpacity>
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Text style={{ fontFamily: "Times New Roman" }}>
+            <Text style={{ 
+              fontFamily: "Times New Roman", 
+              color: "#989898",
+              fontSize: 15
+              }}
+              >
               Bạn chưa có tài khoản ?{" "}
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
               <Text
                 style={{
-                  color: "#4B2C20",
+                  color: "#6E3D2C",
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
+                  fontSize: 15
                 }}
               >
                 Đăng ký ngay !
@@ -175,8 +179,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 34,
   },
   forgotPassword: {
-    color: "#4B2C20",
-    fontSize: 15,
+    color: "#AE7A51",
+    fontSize: 10,
     fontWeight: "bold",
     textAlign: "center",
     margin: 10,
