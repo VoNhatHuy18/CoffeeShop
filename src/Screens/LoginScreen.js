@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  ImageBackground,
 } from "react-native";
+
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // const handleLogin = () => {
   //   // Thực hiện logic đăng nhập ở đây
@@ -56,13 +60,12 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           style={{
             height: 50,
-            width: "70% ",
+            width: "80% ",
             borderColor: "gray",
             borderRadius: 15,
             alignSelf: "center",
             paddingLeft: 10,
             color: "gray",
-            shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
@@ -82,37 +85,57 @@ const LoginScreen = ({ navigation }) => {
         >
           Mật khẩu
         </Text>
-        <TextInput
+        <View
           style={{
+            flexDirection: "row",
+            alignItems: "center",
             height: 50,
-            width: "70% ",
+            width: "80% ",
             borderColor: "gray",
             borderRadius: 15,
             alignSelf: "center",
             paddingLeft: 10,
             color: "gray",
-            shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
             elevation: 5,
           }}
-          secureTextEntry={true}
-          placeholder="Nhập mật khẩu"
-        ></TextInput>
+        >
+          <TextInput
+            style={{
+              height: 50,
+              width: "90% ",
+              borderColor: "gray",
+              borderRadius: 15,
+              alignSelf: "center",
+              color: "gray",
+            }}
+            secureTextEntry={!showPassword}
+            placeholder="Nhập mật khẩu"
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Icon
+              name={showPassword ? "visibility" : "visibility-off"}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
 
-        <View style={{ flex: 1, justifyContent: "center", }}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity onPress={() => navigation.navigate()}>
             <Text style={styles.forgotPassword}>Quên mật khẩu ?</Text>
           </TouchableOpacity>
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Text style={{ 
-              fontFamily: "Times New Roman", 
-              color: "#989898",
-              fontSize: 15
+            <Text
+              style={{
+                fontFamily: "Times New Roman",
+                color: "#989898",
+                fontSize: 15,
               }}
-              >
+            >
               Bạn chưa có tài khoản ?{" "}
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
@@ -121,7 +144,7 @@ const LoginScreen = ({ navigation }) => {
                   color: "#6E3D2C",
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
-                  fontSize: 15
+                  fontSize: 15,
                 }}
               >
                 Đăng ký ngay !
@@ -180,7 +203,7 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     color: "#AE7A51",
-    fontSize: 10,
+    fontSize: 15,
     fontWeight: "bold",
     textAlign: "center",
     margin: 10,

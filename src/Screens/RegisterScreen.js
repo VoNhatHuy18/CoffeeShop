@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { ScrollView } from "react-native-web";
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -22,11 +22,12 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image
           style={styles.logo}
           source={require("../image/HinhGioiThieu/logo.png")}
         />
+
         <View style={styles.login}>
           <Text style={styles.title}>Đăng Ký</Text>
           <View style={{ alignItems: "center" }}>
@@ -90,32 +91,13 @@ const RegisterScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate()}>
-            <View
-              style={{
-                backgroundColor: "#4B2C20",
-                width: "80%",
-                height: 50,
-                borderRadius: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-                margin: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: "Times New Roman",
-                  fontSize: 20,
-                }}
-              >
-                Đăng Ký
-              </Text>
+          <TouchableOpacity onPress={handleRegister}>
+            <View style={styles.registerButton}>
+              <Text style={styles.registerButtonText}>Đăng Ký</Text>
             </View>
           </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -123,9 +105,11 @@ const RegisterScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
     backgroundColor: "#AE7A51",
+  },
+  scrollContainer: {
+    alignItems: "center",
+    paddingVertical: 20,
   },
   logo: {
     width: 100,
@@ -148,7 +132,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   label: {
-    padding: 10,
+    paddingVertical: 10,
     color: "#4E8D7C",
     fontSize: 15,
     fontWeight: "bold",
@@ -184,12 +168,26 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   passwordInput: {
-    flex: 1,
     color: "gray",
     height: 50,
-    width: "100%",
+    width: "90%",
     borderRadius: 15,
     paddingLeft: 10,
+  },
+  registerButton: {
+    backgroundColor: "#4B2C20",
+    width: "80%",
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    margin: 10,
+  },
+  registerButtonText: {
+    color: "white",
+    fontFamily: "Times New Roman",
+    fontSize: 20,
   },
 });
 
