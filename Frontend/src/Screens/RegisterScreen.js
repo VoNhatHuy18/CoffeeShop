@@ -10,15 +10,25 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import { register } from "../Service/authService";
+
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = () => {};
+  const handleRegister = async () => {
+    try {
+      await register(username, email, password);
+      setMessage("Đăng ký thành công!");
+    } catch (error) {
+      setMessage("Đăng ký thất bại");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -90,6 +100,7 @@ const RegisterScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
+          {message && <Text>{message}</Text>}
 
           <TouchableOpacity onPress={handleRegister}>
             <View style={styles.registerButton}>
