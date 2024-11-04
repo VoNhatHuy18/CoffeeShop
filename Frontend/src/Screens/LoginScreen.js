@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation }) => {
         <Text
           style={{
             color: "#4B2C20",
-            fontFamily: "Times New Roman ",
+            fontFamily: "Roboto",
             fontWeight: "bold",
             fontSize: 30,
             textAlign: "center",
@@ -52,7 +52,7 @@ const LoginScreen = ({ navigation }) => {
             color: "#4E8D7C",
             fontSize: 15,
             fontWeight: "bold",
-            fontFamily: "Times New Roman",
+            fontFamily: "Roboto",
           }}
         >
           Email
@@ -60,19 +60,20 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           style={{
             height: 50,
-            width: "80% ",
-            borderColor: "gray",
-            borderRadius: 15,
-            alignSelf: "center",
+            width: "90%",
+            borderRadius: 20,
             paddingLeft: 10,
-            color: "gray",
+            borderColor: "gray",
+            alignSelf: "center",
+            backgroundColor: "#fff",
+            paddingHorizontal: 15,
+            elevation: 5, // cho Android
             shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
           }}
-          placeholder="Nhập Email"
-        ></TextInput>
+          placeholder="Nhập email"
+        />
 
         <Text
           style={{
@@ -80,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
             color: "#4E8D7C",
             fontSize: 15,
             fontWeight: "bold",
-            fontFamily: "Times New Roman",
+            fontFamily: "Roboto",
           }}
         >
           Mật khẩu
@@ -90,26 +91,23 @@ const LoginScreen = ({ navigation }) => {
             flexDirection: "row",
             alignItems: "center",
             height: 50,
-            width: "80% ",
-            borderColor: "gray",
-            borderRadius: 15,
-            alignSelf: "center",
+            width: "90%",
+            borderRadius: 20,
             paddingLeft: 10,
-            color: "gray",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
+            alignSelf: "center",
+            borderColor: "gray",
+            backgroundColor: "#fff",
             elevation: 5,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
           }}
         >
           <TextInput
             style={{
               height: 50,
-              width: "90% ",
-              borderColor: "gray",
+              width: "80%",
               borderRadius: 15,
-              alignSelf: "center",
-              color: "gray",
             }}
             secureTextEntry={!showPassword}
             placeholder="Nhập mật khẩu"
@@ -131,7 +129,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <Text
               style={{
-                fontFamily: "Times New Roman",
+                fontFamily: "Roboto",
                 color: "#989898",
                 fontSize: 15,
               }}
@@ -143,7 +141,7 @@ const LoginScreen = ({ navigation }) => {
                 style={{
                   color: "#6E3D2C",
                   fontWeight: "bold",
-                  fontFamily: "Times New Roman",
+                  fontFamily: "Roboto",
                   fontSize: 15,
                 }}
               >
@@ -167,7 +165,7 @@ const LoginScreen = ({ navigation }) => {
               <Text
                 style={{
                   color: "white",
-                  fontFamily: "Times New Roman",
+                  fontFamily: "Roboto",
                   fontSize: 20,
                 }}
               >
@@ -207,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     margin: 10,
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
   },
 });
 

@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
-import { register } from "../Service/authService";
+import axios from "axios";
 
 const RegisterScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,13 +21,28 @@ const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = async () => {
-    try {
-      await register(username, email, password);
-      setMessage("Đăng ký thành công!");
-    } catch (error) {
-      setMessage("Đăng ký thất bại");
-    }
+  const handleRegister = () => {
+    const userData = {
+      name: name,
+      email,
+      password,
+    };
+    axios
+      .post("http://192.168.1.20:5001/register", userData)
+      .then((res) => {
+        console.log("Server Response:", res.data); // Log the server response
+        if (res.data.status == "ok") {
+          // Show success alert
+          Alert.alert("Đăng ký thành công");
+          navigation.navigate("Login");
+        } else {
+          Alert.alert("Email đã được sử dụng. Vui lòng sử dụng email khác.");
+        }
+      })
+      .catch((err) => {
+        console.log("Error:", err); // Log any errors
+        setMessage("Có lỗi xảy ra. Vui lòng thử lại.");
+      });
   };
 
   return (
@@ -50,8 +65,8 @@ const RegisterScreen = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Nhập Họ Và Tên"
-            value={username}
-            onChangeText={setUsername}
+            value={name}
+            onChangeText={setName}
           />
 
           <Text style={styles.label}>Email</Text>
@@ -100,7 +115,6 @@ const RegisterScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-          {message && <Text>{message}</Text>}
 
           <TouchableOpacity onPress={handleRegister}>
             <View style={styles.registerButton}>
@@ -129,6 +143,7 @@ const styles = StyleSheet.create({
   },
   login: {
     flex: 1,
+    height: "100%",
     width: "100%",
     backgroundColor: "#FAFAFA",
     borderTopLeftRadius: 34,
@@ -137,7 +152,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#4B2C20",
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",
@@ -147,36 +162,32 @@ const styles = StyleSheet.create({
     color: "#4E8D7C",
     fontSize: 15,
     fontWeight: "bold",
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
   },
   input: {
     height: 50,
     width: "100%",
-    borderColor: "gray",
     borderRadius: 15,
     paddingLeft: 10,
-    color: "gray",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    borderColor: "gray",
+    backgroundColor: "#fff",
     elevation: 5,
-    marginBottom: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     height: 50,
     width: "100%",
+    borderRadius: 20,
     borderColor: "gray",
-    borderRadius: 15,
-    color: "gray",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    backgroundColor: "#fff",
     elevation: 5,
-    marginBottom: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   passwordInput: {
     color: "gray",
@@ -197,7 +208,7 @@ const styles = StyleSheet.create({
   },
   registerButtonText: {
     color: "white",
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
     fontSize: 20,
   },
 });

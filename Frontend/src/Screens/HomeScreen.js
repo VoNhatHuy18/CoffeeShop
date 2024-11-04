@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "white",
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
   },
   start: {
     flexDirection: "row",
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#583732",
-    fontFamily: "Times New Roman",
+    fontFamily: "Roboto",
     right: 10,
   },
 });
