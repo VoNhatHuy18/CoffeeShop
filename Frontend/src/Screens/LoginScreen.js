@@ -16,14 +16,6 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // const handleLogin = () => {
-  //   // Thực hiện logic đăng nhập ở đây
-  //   console.log("Email:", email);
-  //   console.log("Password:", password);
-  //   // Điều hướng đến màn hình khác nếu đăng nhập thành công
-  //   // navigation.navigate('HomeScreen');
-  // };
-
   return (
     <View style={styles.container}>
       <Image
