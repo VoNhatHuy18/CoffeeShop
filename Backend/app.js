@@ -42,23 +42,24 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login-user", async (req, res) => {
   const { email, password } = req.body;
+
   const oldUser = await User.findOne({ email: email });
 
   if (!oldUser) {
     return res.send({ data: "User does not exist" });
   }
 
-  if (await bcrypt.compare(password, oldUser.password)) {
-    const token = jwt.sign({ email: oldUser.email }, JWT_SECRET);
+  // if (await bcrypt.compare(password, oldUser.password)) {
+  //   const token = jwt.sign({ email: oldUser.email }, JWT_SECRET);
 
-    if (res.status(201)) {
-      return res.send({ status: "ok", data: token });
-    } else {
-      return res.send({ error: "error" });
-    }
+  if (res.status(201)) {
+    return res.send({ status: "ok" });
+  } else {
+    return res.send({ error: "error" });
   }
+  // }
 });
 
 app.listen(5001, () => {
