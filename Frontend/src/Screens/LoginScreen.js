@@ -18,6 +18,26 @@ const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
+    if (!email) {
+      Alert.alert("Email không được để trống.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Email không đúng định dạng.");
+      return;
+    }
+
+    if (!password) {
+      Alert.alert("Mật khẩu không được để trống.");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      Alert.alert("Mật khẩu phải trên 8 ký tự.");
+      return;
+    }
+
     // console.log(email, password);
     const userData = {
       email: email,
@@ -29,9 +49,19 @@ const LoginScreen = ({ navigation }) => {
         Alert.alert("Đăng nhập thành công");
         navigation.navigate("Product");
       } else {
-        Alert.alert("Đăng nhập thất bại");
+        Alert.alert("Email hoặc mật khẩu không đúng");
       }
     });
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex = /.{8,}/;
+    return passwordRegex.test(password);
   };
 
   return (

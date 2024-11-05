@@ -22,6 +22,46 @@ const RegisterScreen = ({ navigation }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = () => {
+    if (!name) {
+      Alert.alert(" Họ và tên không được để trống.");
+      return;
+    }
+
+    if (!validatename(name)) {
+      Alert.alert("Họ và tên có ký tự không hợp lệ.");
+      return;
+    }
+
+    if (!email) {
+      Alert.alert(" Email không được để trống.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Email không đúng định dạng.");
+      return;
+    }
+
+    if (!password) {
+      Alert.alert(" Mật khẩu không được để trống.");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      Alert.alert("Mật khẩu phải trên 8 ký tự.");
+      return;
+    }
+
+    if (!confirmPassword) {
+      Alert.alert(" Xác nhận mật khẩu không được để trống.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Mật khẩu và xác nhận mật khẩu không khớp.");
+      return;
+    }
+
     const userData = {
       name: name,
       email,
@@ -40,9 +80,24 @@ const RegisterScreen = ({ navigation }) => {
         }
       })
       .catch((err) => {
-        console.log("Error:", err); // Log any errors
+        console.log("Error:", err);
         setMessage("Có lỗi xảy ra. Vui lòng thử lại.");
       });
+  };
+
+  const validatename = (name) => {
+    const nameRegex = /^[a-zA-Z1-9]+$/;
+    return nameRegex.test(name);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex = /.{8,}/;
+    return passwordRegex.test(password);
   };
 
   return (
