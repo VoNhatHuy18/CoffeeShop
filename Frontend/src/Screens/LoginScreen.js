@@ -114,7 +114,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
 
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <TouchableOpacity onPress={() => navigation.navigate()}>
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
             <Text style={styles.forgotPassword}>Quên mật khẩu ?</Text>
           </TouchableOpacity>
 

@@ -63,7 +63,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           placeholder="Nhập Email"
         ></TextInput>
 
-        <TouchableOpacity onPress={() => navigation.navigate()}>
+        <TouchableOpacity onPress={() => navigation.navigate("OTP")}>
           <View
             style={{
               backgroundColor: "#4B2C20",
