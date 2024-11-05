@@ -47,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
       console.log(res.data);
       if (res.data.status == "ok") {
         Alert.alert("Đăng nhập thành công");
-        navigation.navigate("Product");
+        navigation.navigate("Tabs");
       } else {
         Alert.alert("Email hoặc mật khẩu không đúng");
       }
