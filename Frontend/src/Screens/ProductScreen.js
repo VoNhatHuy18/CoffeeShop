@@ -8,8 +8,9 @@ import {
   ImageBackground,
   TouchableOpacity,
   Modal,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
@@ -50,10 +51,14 @@ const ProductScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.componentHello}>
+              <Text style={styles.textHello}>Cà Phê Đá</Text>
+              <Text style={styles.textHello}>Xin Chào !</Text>
+            </View>
           </ImageBackground>
         </SafeAreaView>
 
-        {/* Modal for the popup */}
+        {/* Modal */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -63,11 +68,56 @@ const ProductScreen = () => {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <Text style={styles.modalText}>Menu Options</Text>
-              {/* Add your menu items here */}
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  paddingBottom: 5,
+                  borderBottomWidth: 1,
+                  width: 120,
+                }}
+              >
+                <Image
+                  source={{ uri: "https://picsum.photos/200" }}
+                  style={{ height: 20, width: 20, borderRadius: 50 }}
+                />
+                <Text>Tài khoản</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  paddingBottom: 5,
+                  borderBottomWidth: 1,
+                  width: 120,
+                }}
+              >
+                <Feather name="package" size={20} color="black" />
+                <Text>Đơn hàng</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  paddingBottom: 5,
+                  borderBottomWidth: 1,
+                  width: 120,
+                }}
+              >
+                <Ionicons name="help-circle-outline" size={20} color="black" />
+                <Text>Về chúng tôi</Text>
+              </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={toggleModal}
                 style={styles.closeButton}
               >
+                <Ionicons name="log-in-outline" size={20} color="white" />
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
@@ -118,7 +168,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "80%",
-    backgroundColor: "white",
+    backgroundColor: "#FFF5E9",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -129,6 +179,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton: {
+    flexDirection: "row",
     marginTop: 20,
     backgroundColor: "#AE7A51",
     borderRadius: 5,
@@ -137,6 +188,15 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
+    marginLeft: 5,
+  },
+
+  textHello: {
+    fontSize: 45,
+    fontWeight: "bold",
+    color: "#fff",
+    paddingLeft: 10,
+    fontFamily: "Roboto",
   },
 });
 
