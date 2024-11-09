@@ -11,7 +11,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
@@ -46,14 +46,14 @@ const images = [
   require("../image/HinhGioiThieu/coffeeBanner4.png"),
 ];
 
-const ProductScreen = () => {
+const ProductScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [coffee, setCoffees] = useState([]);
 
-  const API_URL = "https://671db53209103098807daa1c.mockapi.io/food";
+  const API_URL = "https://65726345d61ba6fcc014b530.mockapi.io/api/Caphely";
   const fetchCoffees = async () => {
     const respone = await axios.get(API_URL);
-    setFoods(respone.data);
+    setCoffees(respone.data);
   };
 
   useEffect(() => {
@@ -63,6 +63,17 @@ const ProductScreen = () => {
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate("Coffee")}
+    >
+      <Image source={{ uri: item.Image }} style={styles.imageCoffee} />
+      <Text>{item.Name}</Text>
+      <Text>{item.price}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <LinearGradient
@@ -135,6 +146,13 @@ const ProductScreen = () => {
               showsHorizontalScrollIndicator={false}
             />
           </View>
+          <FlatList
+            data={coffee}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+          />
         </SafeAreaView>
 
         {/* Modal */}
@@ -252,6 +270,7 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: "row",
     alignSelf: "center",
+    marginLeft: 165,
   },
   modalOverlay: {
     flex: 1,
@@ -332,6 +351,25 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     color: "#fff",
+  },
+  card: {
+    width: "50%",
+    height: 220,
+    borderRadius: 10,
+    backgroundColor: "#F7BA8326",
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    alignItems: "center",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  imageCoffee: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    marginTop: 15,
   },
 });
 
