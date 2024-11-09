@@ -9,13 +9,35 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
+import axios from "axios";
 
 const { width } = Dimensions.get("window");
+
+const drinks = [
+  {
+    id: "1",
+    name: "Espresso",
+    image: require("../image/HinhGioiThieu/Espresso.png"),
+  },
+  {
+    id: "2",
+    name: "Latte",
+    image: require("../image/HinhGioiThieu/Latte.png"),
+  },
+  {
+    id: "3",
+    name: "Cà Phê",
+    image: require("../image/HinhGioiThieu/Coffee.png"),
+  },
+  { id: "4", name: "Trà", image: require("../image/HinhGioiThieu/Tra.png") },
+  { id: "5", name: "Bánh", image: require("../image/HinhGioiThieu/Banh.png") },
+];
 
 const images = [
   require("../image/HinhGioiThieu/coffeeBanner1.png"),
@@ -26,6 +48,17 @@ const images = [
 
 const ProductScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [coffee, setCoffees] = useState([]);
+
+  const API_URL = "https://671db53209103098807daa1c.mockapi.io/food";
+  const fetchCoffees = async () => {
+    const respone = await axios.get(API_URL);
+    setFoods(respone.data);
+  };
+
+  useEffect(() => {
+    fetchCoffees();
+  }, []);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -33,7 +66,7 @@ const ProductScreen = () => {
 
   return (
     <LinearGradient
-      colors={["#AE7A51", "#AE7A51", "#fff"]}
+      colors={["#AE7A51", "#AE7A51", "#AE7A51", "#AE7A51", "#AE7A51", "#fff"]}
       style={styles.container}
     >
       <ScrollView>
@@ -81,10 +114,27 @@ const ProductScreen = () => {
             ))}
           </Swiper>
           <Text
-            style={{ fontFamily: "Roboto", color: "#583732", fontSize: 40 }}
+            style={{ fontFamily: "Roboto", color: "#583732", fontSize: 35 }}
           >
             Menu
           </Text>
+
+          <View style={styles.menuContainer}>
+            <FlatList
+              data={drinks}
+              renderItem={({ item }) => (
+                <View style={styles.itemContainer}>
+                  <TouchableOpacity style={styles.itemContainer}>
+                    <Image source={item.image} style={styles.imageMenu} />
+                    <Text style={styles.text}>{item.name}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
         </SafeAreaView>
 
         {/* Modal */}
@@ -262,6 +312,27 @@ const styles = StyleSheet.create({
   },
   swiperContainer: {
     height: 180,
+  },
+  menuContainer: {
+    alignItems: "center",
+  },
+  itemContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#A0522D",
+    height: 35,
+    width: 60,
+    borderRadius: 25,
+    marginHorizontal: 10,
+  },
+  imageMenu: {
+    width: 15,
+    height: 15,
+    borderRadius: 5,
+  },
+  text: {
+    fontSize: 12,
+    color: "#fff",
   },
 });
 
