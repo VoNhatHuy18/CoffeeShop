@@ -10,9 +10,19 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import Swiper from "react-native-swiper";
+
+const { width } = Dimensions.get("window");
+
+const images = [
+  require("../image/HinhGioiThieu/coffeeBanner1.png"),
+  require("../image/HinhGioiThieu/coffeeBanner2.png"),
+  require("../image/HinhGioiThieu/coffeeBanner3.png"),
+  require("../image/HinhGioiThieu/coffeeBanner4.png"),
+];
 
 const ProductScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,6 +66,25 @@ const ProductScreen = () => {
               <Text style={styles.textHello}>Xin Chào !</Text>
             </View>
           </ImageBackground>
+
+          <Swiper
+            autoplay={true}
+            autoplayTimeout={3}
+            loop={true}
+            dotStyle={styles.dot}
+            containerStyle={styles.swiperContainer}
+          >
+            {images.map((image, index) => (
+              <View style={styles.imageContainer} key={index}>
+                <Image source={image} style={styles.image} />
+              </View>
+            ))}
+          </Swiper>
+          <Text
+            style={{ fontFamily: "Roboto", color: "#583732", fontSize: 40 }}
+          >
+            Menu
+          </Text>
         </SafeAreaView>
 
         {/* Modal */}
@@ -114,10 +143,23 @@ const ProductScreen = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  paddingBottom: 5,
+                  borderBottomWidth: 1,
+                  width: 120,
+                }}
+              >
+                <Ionicons name="log-in-outline" size={20} color="black" />
+                <Text>Đăng xuất</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress={toggleModal}
                 style={styles.closeButton}
               >
-                <Ionicons name="log-in-outline" size={20} color="white" />
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
@@ -131,6 +173,7 @@ const ProductScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 5,
   },
   iconCoffee: {
     width: 25,
@@ -138,8 +181,9 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   imageBackground: {
-    height: 225,
-    width: 220,
+    height: 150,
+    width: 250,
+    justifyContent: "center",
   },
   header: {
     flexDirection: "row",
@@ -197,6 +241,27 @@ const styles = StyleSheet.create({
     color: "#fff",
     paddingLeft: 10,
     fontFamily: "Roboto",
+  },
+
+  imageContainer: {
+    borderRadius: 10,
+    overflow: "hidden",
+    alignItems: "center",
+  },
+  image: {
+    width: "90%",
+    height: 180,
+    borderRadius: 10,
+  },
+  dot: {
+    backgroundColor: "black",
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 3,
+  },
+  swiperContainer: {
+    height: 180,
   },
 });
 
