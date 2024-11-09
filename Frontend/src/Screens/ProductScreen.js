@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: "row",
     alignSelf: "center",
-    marginLeft: 180,
   },
   modalOverlay: {
     flex: 1,
