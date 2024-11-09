@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // import Icon from "react-native-vector-icons/Ionicons";
-import { Ionicons} from "react-native-vector-icons";
+import { Ionicons } from "react-native-vector-icons";
 
 import LoginScreen from "./src/Screens/LoginScreen";
 import RegisterScreen from "./src/Screens/RegisterScreen";
@@ -59,7 +59,11 @@ const App = () => {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="OTP" component={OTPScreen} />
-        <Stack.Screen name="Tabs" component={MyTabs} />
+        <Stack.Screen
+          name="Tabs"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
