@@ -13,6 +13,7 @@ import OTPScreen from "./src/Screens/OTPScreen";
 import ProductScreen from "./src/Screens/ProductScreen";
 import CoffeePackScreen from "./src/Screens/CoffeePackScreen";
 import CoffeeScreen from "./src/Screens/CoffeeScreen";
+import CartScreen from "./src/Screens/CartScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -44,6 +45,7 @@ function MyTabs() {
       <Tab.Screen name="Home" component={ProductScreen} />
       <Tab.Screen name="Coffee" component={CoffeeScreen} />
       <Tab.Screen name="CoffeePack" component={CoffeePackScreen} />
+      <Tab.Screen name="Cart" component={CartScreen} />
     </Tab.Navigator>
   );
 }

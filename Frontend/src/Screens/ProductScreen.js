@@ -48,26 +48,61 @@ const images = [
 
 const ProductScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [coffee, setCoffees] = useState([]);
+  const [coffeely, setCoffeesly] = useState([]);
+  const [coffeegoi, setCoffeesgoi] = useState([]);
 
-  const API_URL = "https://65726345d61ba6fcc014b530.mockapi.io/api/Caphely";
-  const fetchCoffees = async () => {
-    const respone = await axios.get(API_URL);
-    setCoffees(respone.data);
+  const APIcoffeely = "https://673151eb7aaf2a9aff105a1b.mockapi.io/caphely";
+  const fetchCoffeesly = async () => {
+    const respone = await axios.get(APIcoffeely);
+    setCoffeesly(respone.data);
   };
 
   useEffect(() => {
-    fetchCoffees();
+    fetchCoffeesly();
+  }, []);
+
+  const APIcoffeegoi =
+    "https://65726345d61ba6fcc014b530.mockapi.io/api/Caphegoi ";
+  const fetchCoffeesgoi = async () => {
+    const respone = await axios.get(APIcoffeegoi);
+    setCoffeesgoi(respone.data);
+  };
+
+  useEffect(() => {
+    fetchCoffeesgoi();
   }, []);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  const renderItem = ({ item }) => (
+  const rendercoffeely = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("Coffee")}
+      onPress={() =>
+        navigation.navigate("Coffee", {
+          image: item.Image,
+          name: item.Name,
+          price: item.price,
+        })
+      }
+    >
+      <Image source={{ uri: item.Image }} style={styles.imageCoffee} />
+      <Text>{item.Name}</Text>
+      <Text>{item.price}</Text>
+    </TouchableOpacity>
+  );
+
+  const rendercoffeegoi = ({ item }) => (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate("CoffeePack", {
+          image: item.Image,
+          name: item.Name,
+          price: item.price,
+        })
+      }
     >
       <Image source={{ uri: item.Image }} style={styles.imageCoffee} />
       <Text>{item.Name}</Text>
@@ -147,11 +182,28 @@ const ProductScreen = ({ navigation }) => {
             />
           </View>
           <FlatList
-            data={coffee}
-            renderItem={renderItem}
+            data={coffeely}
+            renderItem={rendercoffeely}
             keyExtractor={(item) => item.id}
             numColumns={2}
-            columnWrapperStyle={styles.row}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "#583732", fontSize: 30, marginRight: 5 }}>
+              {" "}
+              Cà phê gói
+            </Text>
+            <Image source={require("../image/HinhGioiThieu/caphe.png")} />
+          </View>
+          <FlatList
+            data={coffeegoi}
+            renderItem={rendercoffeegoi}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
           />
         </SafeAreaView>
 
