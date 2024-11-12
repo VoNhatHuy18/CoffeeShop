@@ -31,17 +31,28 @@ const CoffeePackScreen = ({ route, navigation }) => {
   }, []);
 
   const handleAddToCart = async () => {
-    const newItem = { image, name, price, quantity };
-    const updatedCart = [...cartItems, newItem];
-    setCartItems(updatedCart);
     try {
+      const isCheckoutComplete = await AsyncStorage.getItem(
+        "isCheckoutComplete"
+      );
+
+      let updatedCart;
+      if (isCheckoutComplete === "true") {
+        // Reset cart if checkout was completed
+        updatedCart = [{ image, name, price, quantity }];
+        await AsyncStorage.setItem("isCheckoutComplete", "false"); // Reset the flag
+      } else {
+        updatedCart = [...cartItems, { image, name, price, quantity }];
+      }
+
+      setCartItems(updatedCart);
       await AsyncStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+      Alert.alert("Thông Báo", "Đã thêm vào giỏ hàng!");
+      navigation.navigate("Products");
     } catch (error) {
       console.error("Failed to save cart items:", error);
     }
-    Alert.alert("Thông Báo", "Đã thêm vào giỏ hàng!");
-    navigation.navigate("Products");
-    // navigation.navigate("Cart", { cartItems: updatedCart });
   };
 
   return (

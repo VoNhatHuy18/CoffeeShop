@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  ImageBackground,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Swipeable } from "react-native-gesture-handler";
@@ -15,6 +16,9 @@ import { useFocusEffect } from "@react-navigation/native";
 const CartScreen = ({ navigation }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isCartEmpty, setIsCartEmpty] = useState(false);
+
+  // const [isCheckoutComplete, setIsCheckoutComplete] = useState(false);
 
   const loadCart = async () => {
     try {
@@ -31,7 +35,6 @@ const CartScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    
     const calculatedTotal = cartItems.reduce((total, item) => {
       const itemPrice = parseInt(item.price) || 0;
       const itemQuantity = parseInt(item.quantity) || 0;
@@ -47,15 +50,23 @@ const CartScreen = ({ navigation }) => {
   );
 
   const handleCheckout = async () => {
-    try {
-      await AsyncStorage.removeItem("cartItems");
-      setCartItems([]);
-      setTotalPrice(0);
+    if (cartItems.length === 0) {
+      Alert.alert("Giỏ hàng của bạn đang trống!");
+      return;
+    } else {
+      try {
+        await AsyncStorage.removeItem("cartItems");
 
-      navigation.navigate("Pay", { cartItems: cartItems || [] });
-    } catch (error) {
-      console.error("Failed to clear cart:", error);
-      Alert.alert("Error", "Failed to clear cart, please try again.");
+        setCartItems([]);
+
+        await AsyncStorage.setItem("isCheckoutComplete", "true");
+        Alert.alert("Thông Báo", "Thanh toán thành công!");
+        navigation.navigate("Products");
+        // Navigate after setting state, ensuring that cartItems is emptied before navigating
+        // navigation.navigate("Pay", { cartItems: [] });
+      } catch (error) {
+        console.error("Failed to clear cart:", error);
+      }
     }
   };
 
@@ -98,6 +109,16 @@ const CartScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {isCartEmpty ? (
+        <ImageBackground
+          source={require("../image/HinhGioiThieu/Emptycart.png")}
+          style={styles.imageBackground}
+        >
+          <Text style={styles.emptyCartMessage}>Giỏ hàng của bạn trống!</Text>
+        </ImageBackground>
+      ) : (
+        <></>
+      )}
       <Text style={styles.header}>Giỏ Hàng</Text>
       {cartItems.length > 0 ? (
         <>
@@ -188,13 +209,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF4C4C",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%",
+    height: "90%",
     width: 80,
     borderRadius: 10,
   },
   deleteText: {
     color: "#FFF",
     fontWeight: "bold",
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
 });
 
