@@ -110,6 +110,12 @@ const ProductScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const handleAddToCart = () => {
+    // const newItem = { image, name, price, quantity };
+    setCartItems([...cartItems]);
+    navigation.navigate("Cart", { cartItems: [...cartItems] });
+  };
+
   return (
     <LinearGradient
       colors={["#AE7A51", "#AE7A51", "#AE7A51", "#AE7A51", "#AE7A51", "#fff"]}
@@ -243,6 +249,7 @@ const ProductScreen = ({ navigation }) => {
                   borderBottomWidth: 1,
                   width: 120,
                 }}
+                onPress={() => navigation.navigate("Cart")}
               >
                 <Feather name="package" size={20} color="black" />
                 <Text>Đơn hàng</Text>

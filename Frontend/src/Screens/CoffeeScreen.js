@@ -12,15 +12,12 @@ import { LinearGradient } from "expo-linear-gradient";
 const CoffeeScreen = ({ route, navigation }) => {
   const { image, name, price } = route.params;
   const [quantity, setQuantity] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleIncrease = () => {
-    setQuantity(quantity + 1);
+  const handleAddToCart = () => {
+    const newItem = { image, name, price, quantity };
+    setCartItems([...cartItems, newItem]);
+    navigation.navigate("Cart", { cartItems: [...cartItems, newItem] });
   };
 
   return (
@@ -40,18 +37,24 @@ const CoffeeScreen = ({ route, navigation }) => {
             <Text style={styles.buttonText}>Số Lượng</Text>
           </View>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleDecrease}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+            >
               <Text style={styles.buttonText}>−</Text>
             </TouchableOpacity>
             <Text style={styles.quantityText}>{quantity}</Text>
-            <TouchableOpacity style={styles.button} onPress={handleIncrease}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setQuantity(quantity + 1)}
+            >
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.addToCartButton}
-              onPress={() => navigation.navigate("Cart")}
+              onPress={handleAddToCart}
             >
               <Text style={styles.cartText}>Thêm Vào Giỏ</Text>
             </TouchableOpacity>

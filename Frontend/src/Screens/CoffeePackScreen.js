@@ -9,18 +9,15 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-const CoffeePackScreen = ({ route }) => {
+const CoffeePackScreen = ({ route, navigation }) => {
   const { image, name, price } = route.params;
   const [quantity, setQuantity] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleIncrease = () => {
-    setQuantity(quantity + 1);
+  const handleAddToCart = () => {
+    const newItem = { image, name, price, quantity };
+    setCartItems([...cartItems, newItem]);
+    navigation.navigate("Cart", { cartItems: [...cartItems, newItem] });
   };
 
   return (
@@ -34,24 +31,31 @@ const CoffeePackScreen = ({ route }) => {
           <Text style={styles.productName}>{name}</Text>
           <Text style={styles.productPrice}>{price} VNĐ</Text>
           <Text style={styles.description}>
-            Hạt Arabica thường được đánh giá cao hơn hạt Robusta về hương vị.
-            Chúng có hương thơm nhẹ nhàng, vị chua thanh và độ ngọt tự nhiên,
-            thường mang lại trải nghiệm uống cà phê tinh tế hơn.
+            Là hương vị nguyên bản của những hạt cà phê Arabica
           </Text>
           <View>
             <Text style={styles.buttonText}>Số Lượng</Text>
           </View>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleDecrease}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+            >
               <Text style={styles.buttonText}>−</Text>
             </TouchableOpacity>
             <Text style={styles.quantityText}>{quantity}</Text>
-            <TouchableOpacity style={styles.button} onPress={handleIncrease}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setQuantity(quantity + 1)}
+            >
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.addToCartButton}>
+            <TouchableOpacity
+              style={styles.addToCartButton}
+              onPress={handleAddToCart}
+            >
               <Text style={styles.cartText}>Thêm Vào Giỏ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buyNowButton}>

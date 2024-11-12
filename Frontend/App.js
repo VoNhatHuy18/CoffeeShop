@@ -2,7 +2,6 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import Icon from "react-native-vector-icons/Ionicons";
 import { Ionicons } from "react-native-vector-icons";
 
 import LoginScreen from "./src/Screens/LoginScreen";
@@ -24,16 +23,14 @@ function MyTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          // Tùy chỉnh icon theo tên của route
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline"; // Icon của Ionicons
+            iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Coffee") {
             iconName = focused ? "cafe" : "cafe-outline";
           } else if (route.name === "CoffeePack") {
             iconName = focused ? "bag" : "bag-outline";
           }
 
-          // Trả về component icon từ react-native-vector-icons
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "tomato",
@@ -45,7 +42,6 @@ function MyTabs() {
       <Tab.Screen name="Home" component={ProductScreen} />
       <Tab.Screen name="Coffee" component={CoffeeScreen} />
       <Tab.Screen name="CoffeePack" component={CoffeePackScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
     </Tab.Navigator>
   );
 }
@@ -66,6 +62,7 @@ const App = () => {
           component={MyTabs}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="Cart" component={CartScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
