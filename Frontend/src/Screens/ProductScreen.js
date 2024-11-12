@@ -10,11 +10,13 @@ import {
   Modal,
   Dimensions,
   FlatList,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const { width } = Dimensions.get("window");
@@ -110,10 +112,26 @@ const ProductScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  const handleAddToCart = () => {
-    // const newItem = { image, name, price, quantity };
-    setCartItems([...cartItems]);
-    navigation.navigate("Cart", { cartItems: [...cartItems] });
+  const handleLogout = async () => {
+    try {
+      // Clear all user data in AsyncStorage
+      await AsyncStorage.clear();
+      Alert.alert("Logout Successful", "You have been logged out.");
+
+      // Navigate to the Login screen
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Alert.alert("Logout Error", "Failed to log out. Please try again.");
+    }
+  };
+
+  const handleGoToCart = () => {
+    // Navigate to CartScreen with the cart items (if any)
+    navigation.navigate("Cart", { cartItems: [] }); // Pass any necessary data
   };
 
   return (
@@ -138,7 +156,10 @@ const ProductScreen = ({ navigation }) => {
                 <Text style={styles.textHeader2}>Chào bạn!</Text>
               </View>
               <View style={styles.menu}>
-                <TouchableOpacity style={{ marginHorizontal: 10 }}>
+                <TouchableOpacity
+                  style={{ marginHorizontal: 10 }}
+                  onPress={handleGoToCart}
+                >
                   <Feather name="shopping-bag" size={24} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={toggleModal}>
@@ -249,7 +270,7 @@ const ProductScreen = ({ navigation }) => {
                   borderBottomWidth: 1,
                   width: 120,
                 }}
-                onPress={() => navigation.navigate("Cart")}
+                onPress={handleGoToCart}
               >
                 <Feather name="package" size={20} color="black" />
                 <Text>Đơn hàng</Text>
@@ -278,6 +299,7 @@ const ProductScreen = ({ navigation }) => {
                   borderBottomWidth: 1,
                   width: 120,
                 }}
+                onPress={handleLogout}
               >
                 <Ionicons name="log-in-outline" size={20} color="black" />
                 <Text>Đăng xuất</Text>

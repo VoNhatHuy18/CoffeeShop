@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,71 +6,115 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Swipeable } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
-const CartScreen = ({ route }) => {
-  const [cartItems, setCartItems] = useState(route.params.cartItems || []);
+const CartScreen = ({ navigation }) => {
+  const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  // Calculate total price whenever cartItems changes
+  const loadCart = async () => {
+    try {
+      const savedCart = await AsyncStorage.getItem("cartItems");
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        setCartItems(parsedCart);
+      } else {
+        setCartItems([]);
+      }
+    } catch (error) {
+      console.error("Failed to load cart items:", error);
+    }
+  };
+
   useEffect(() => {
+    
     const calculatedTotal = cartItems.reduce((total, item) => {
       const itemPrice = parseInt(item.price) || 0;
       const itemQuantity = parseInt(item.quantity) || 0;
-
-      console.log("Item:", item);
-      console.log("Parsed Price:", itemPrice);
-      console.log("Parsed Quantity:", itemQuantity);
-
       return total + itemPrice * itemQuantity;
     }, 0);
-
-    console.log("Total Price:", calculatedTotal);
     setTotalPrice(calculatedTotal);
   }, [cartItems]);
 
-  // Handle delete item
-  const handleDelete = (index) => {
-    const updatedCart = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedCart);
+  useFocusEffect(
+    useCallback(() => {
+      loadCart();
+    }, [])
+  );
+
+  const handleCheckout = async () => {
+    try {
+      await AsyncStorage.removeItem("cartItems");
+      setCartItems([]);
+      setTotalPrice(0);
+
+      navigation.navigate("Pay", { cartItems: cartItems || [] });
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      Alert.alert("Error", "Failed to clear cart, please try again.");
+    }
   };
 
-  const renderRightActions = (index) => (
-    <TouchableOpacity
-      style={styles.deleteButton}
-      onPress={() => handleDelete(index)}
-    >
-      <Text style={styles.deleteText}>Xóa</Text>
-    </TouchableOpacity>
-  );
+  const handleDeleteItem = async (itemToDelete) => {
+    const updatedCartItems = cartItems.filter((item) => item !== itemToDelete);
+    setCartItems(updatedCartItems);
 
-  const renderItem = ({ item, index }) => (
-    <Swipeable renderRightActions={() => renderRightActions(index)}>
-      <View style={styles.cartItem}>
-        <Image source={{ uri: item.image }} style={styles.productImage} />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.productName}>{item.name}</Text>
-          <Text style={styles.productDetails}>Phân Loại: Cà Phê Gói</Text>
-          <Text style={styles.productPrice}>Giá: {item.price} VNĐ</Text>
-          <Text style={styles.productQuantity}>Số Lượng: {item.quantity}</Text>
+    try {
+      await AsyncStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    } catch (error) {
+      console.error("Failed to update cart:", error);
+    }
+  };
+
+  const renderItem = ({ item }) => {
+    const renderRightActions = () => (
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleDeleteItem(item)}
+      >
+        <Text style={styles.deleteText}>Xóa</Text>
+      </TouchableOpacity>
+    );
+
+    return (
+      <Swipeable renderRightActions={renderRightActions}>
+        <View style={styles.cartItem}>
+          <Image source={{ uri: item.image }} style={styles.productImage} />
+          <View style={styles.productDetails}>
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productProperty}>
+              Số lượng: {item.quantity}
+            </Text>
+            <Text style={styles.productProperty}>Giá: {item.price} VNĐ</Text>
+          </View>
         </View>
-      </View>
-    </Swipeable>
-  );
+      </Swipeable>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Giỏ Hàng</Text>
-      <FlatList
-        data={cartItems}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Tổng cộng: {totalPrice}.000 VNĐ</Text>
-      </View>
-      <TouchableOpacity style={styles.checkoutButton}>
+      {cartItems.length > 0 ? (
+        <>
+          <FlatList
+            data={cartItems}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <Text style={styles.totalText}>
+            Tổng cộng: {totalPrice + ",000 VNĐ"}
+          </Text>
+        </>
+      ) : (
+        <Text style={styles.emptyCartText}>Giỏ hàng của bạn đang trống!</Text>
+      )}
+
+      <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
         <Text style={styles.checkoutText}>Thanh Toán</Text>
       </TouchableOpacity>
     </View>
@@ -103,47 +147,30 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
-  detailsContainer: {
-    flex: 1,
+  productDetails: {
+    flexDirection: "column",
+    justifyContent: "center",
   },
   productName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#583732",
   },
-  productDetails: {
+  productProperty: {
     fontSize: 14,
     color: "#583732",
-  },
-  productPrice: {
-    fontSize: 14,
-    color: "#583732",
-  },
-  productQuantity: {
-    fontSize: 14,
-    color: "#583732",
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 70,
-    height: "100%",
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  deleteText: {
-    color: "#FFF",
-    fontWeight: "bold",
-  },
-  totalContainer: {
-    marginTop: 20,
-    alignItems: "center",
   },
   totalText: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#583732",
+    marginTop: 10,
+  },
+  emptyCartText: {
+    fontSize: 18,
+    color: "#583732",
+    textAlign: "center",
+    marginTop: 20,
   },
   checkoutButton: {
     backgroundColor: "#AE7A51",
@@ -156,6 +183,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#FFF",
+  },
+  deleteButton: {
+    backgroundColor: "#FF4C4C",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    width: 80,
+    borderRadius: 10,
+  },
+  deleteText: {
+    color: "#FFF",
+    fontWeight: "bold",
   },
 });
 

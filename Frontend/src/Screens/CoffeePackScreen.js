@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,18 +6,42 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CoffeePackScreen = ({ route, navigation }) => {
   const { image, name, price } = route.params;
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
 
-  const handleAddToCart = () => {
+  useEffect(() => {
+    const loadCart = async () => {
+      try {
+        const savedCart = await AsyncStorage.getItem("cartItems");
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart));
+        }
+      } catch (error) {
+        console.error("Failed to load cart items:", error);
+      }
+    };
+    loadCart();
+  }, []);
+
+  const handleAddToCart = async () => {
     const newItem = { image, name, price, quantity };
-    setCartItems([...cartItems, newItem]);
-    navigation.navigate("Cart", { cartItems: [...cartItems, newItem] });
+    const updatedCart = [...cartItems, newItem];
+    setCartItems(updatedCart);
+    try {
+      await AsyncStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    } catch (error) {
+      console.error("Failed to save cart items:", error);
+    }
+    Alert.alert("Thông Báo", "Đã thêm vào giỏ hàng!");
+    navigation.navigate("Products");
+    // navigation.navigate("Cart", { cartItems: updatedCart });
   };
 
   return (
@@ -58,7 +82,10 @@ const CoffeePackScreen = ({ route, navigation }) => {
             >
               <Text style={styles.cartText}>Thêm Vào Giỏ</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buyNowButton}>
+            <TouchableOpacity
+              style={styles.buyNowButton}
+              // onPress={() => navigation.navigate("Pay")}
+            >
               <Text style={styles.buyText}>Mua Ngay</Text>
             </TouchableOpacity>
           </View>

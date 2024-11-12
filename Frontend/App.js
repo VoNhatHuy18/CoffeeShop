@@ -13,6 +13,7 @@ import ProductScreen from "./src/Screens/ProductScreen";
 import CoffeePackScreen from "./src/Screens/CoffeePackScreen";
 import CoffeeScreen from "./src/Screens/CoffeeScreen";
 import CartScreen from "./src/Screens/CartScreen";
+import PayScreen from "./src/Screens/PayScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,7 @@ function MyTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Home") {
+          if (route.name === "Products") {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Coffee") {
             iconName = focused ? "cafe" : "cafe-outline";
@@ -39,7 +40,7 @@ function MyTabs() {
         tabBarLabel: () => null,
       })}
     >
-      <Tab.Screen name="Home" component={ProductScreen} />
+      <Tab.Screen name="Products" component={ProductScreen} />
       <Tab.Screen name="Coffee" component={CoffeeScreen} />
       <Tab.Screen name="CoffeePack" component={CoffeePackScreen} />
     </Tab.Navigator>
@@ -63,6 +64,7 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Pay" component={PayScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
