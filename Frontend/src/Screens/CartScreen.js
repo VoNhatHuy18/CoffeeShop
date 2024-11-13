@@ -12,19 +12,20 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Swipeable } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import Checkbox from "expo-checkbox"; // Assuming you're using expo-checkbox
 
 const CartScreen = ({ navigation }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [isCartEmpty, setIsCartEmpty] = useState(false);
-
-  // const [isCheckoutComplete, setIsCheckoutComplete] = useState(false);
 
   const loadCart = async () => {
     try {
       const savedCart = await AsyncStorage.getItem("cartItems");
       if (savedCart) {
-        const parsedCart = JSON.parse(savedCart);
+        const parsedCart = JSON.parse(savedCart).map((item) => ({
+          ...item,
+          selected: false, // Add selected state to each item
+        }));
         setCartItems(parsedCart);
       } else {
         setCartItems([]);
@@ -34,15 +35,6 @@ const CartScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const calculatedTotal = cartItems.reduce((total, item) => {
-      const itemPrice = parseInt(item.price) || 0;
-      const itemQuantity = parseInt(item.quantity) || 0;
-      return total + itemPrice * itemQuantity;
-    }, 0);
-    setTotalPrice(calculatedTotal);
-  }, [cartItems]);
-
   useFocusEffect(
     useCallback(() => {
       loadCart();
@@ -50,20 +42,17 @@ const CartScreen = ({ navigation }) => {
   );
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0) {
+    const selectedItems = cartItems.filter((item) => item.selected);
+    if (selectedItems.length === 0) {
       Alert.alert("Giỏ hàng của bạn đang trống!");
       return;
     } else {
       try {
         await AsyncStorage.removeItem("cartItems");
-
         setCartItems([]);
-
-        await AsyncStorage.setItem("isCheckoutComplete", "true");
+        setTotalPrice(0);
         Alert.alert("Thông Báo", "Thanh toán thành công!");
         navigation.navigate("Products");
-        // Navigate after setting state, ensuring that cartItems is emptied before navigating
-        // navigation.navigate("Pay", { cartItems: [] });
       } catch (error) {
         console.error("Failed to clear cart:", error);
       }
@@ -73,6 +62,36 @@ const CartScreen = ({ navigation }) => {
   const handleDeleteItem = async (itemToDelete) => {
     const updatedCartItems = cartItems.filter((item) => item !== itemToDelete);
     setCartItems(updatedCartItems);
+    try {
+      await AsyncStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    } catch (error) {
+      console.error("Failed to update cart:", error);
+    }
+  };
+
+  const toggleSelectItem = (item) => {
+    const updatedCartItems = cartItems.map((cartItem) =>
+      cartItem === item
+        ? { ...cartItem, selected: !cartItem.selected }
+        : cartItem
+    );
+    setCartItems(updatedCartItems);
+
+    const calculatedTotal = updatedCartItems.reduce((total, cartItem) => {
+      if (cartItem.selected) {
+        const itemPrice = parseInt(cartItem.price) || 0;
+        const itemQuantity = parseInt(cartItem.quantity) || 0;
+        return total + itemPrice * itemQuantity;
+      }
+      return total;
+    }, 0);
+    setTotalPrice(calculatedTotal);
+  };
+
+  const handleDeleteSelectedItems = async () => {
+    const updatedCartItems = cartItems.filter((item) => !item.selected);
+    setCartItems(updatedCartItems);
+    setTotalPrice(0);
 
     try {
       await AsyncStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
@@ -94,6 +113,11 @@ const CartScreen = ({ navigation }) => {
     return (
       <Swipeable renderRightActions={renderRightActions}>
         <View style={styles.cartItem}>
+          <Checkbox
+            value={item.selected}
+            onValueChange={() => toggleSelectItem(item)}
+            style={styles.checkbox}
+          />
           <Image source={{ uri: item.image }} style={styles.productImage} />
           <View style={styles.productDetails}>
             <Text style={styles.productName}>{item.name}</Text>
@@ -109,16 +133,6 @@ const CartScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {isCartEmpty ? (
-        <ImageBackground
-          source={require("../image/HinhGioiThieu/Emptycart.png")}
-          style={styles.imageBackground}
-        >
-          <Text style={styles.emptyCartMessage}>Giỏ hàng của bạn trống!</Text>
-        </ImageBackground>
-      ) : (
-        <></>
-      )}
       <Text style={styles.header}>Giỏ Hàng</Text>
       {cartItems.length > 0 ? (
         <>
@@ -133,6 +147,15 @@ const CartScreen = ({ navigation }) => {
         </>
       ) : (
         <Text style={styles.emptyCartText}>Giỏ hàng của bạn đang trống!</Text>
+      )}
+
+      {cartItems.some((item) => item.selected) && (
+        <TouchableOpacity
+          style={styles.deleteSelectedButton}
+          onPress={handleDeleteSelectedItems}
+        >
+          <Text style={styles.deleteSelectedText}>Xóa Sản Phẩm Đã Chọn</Text>
+        </TouchableOpacity>
       )}
 
       <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
@@ -161,6 +184,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
+    alignItems: "center",
+  },
+  checkbox: {
+    marginRight: 10,
   },
   productImage: {
     width: 60,
@@ -205,6 +232,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFF",
   },
+  deleteSelectedButton: {
+    backgroundColor: "#FF4C4C",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  deleteSelectedText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#FFF",
+  },
   deleteButton: {
     backgroundColor: "#FF4C4C",
     justifyContent: "center",
@@ -216,13 +255,6 @@ const styles = StyleSheet.create({
   deleteText: {
     color: "#FFF",
     fontWeight: "bold",
-  },
-  imageBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
   },
 });
 
